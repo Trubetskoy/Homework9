@@ -14,7 +14,7 @@ function isLogedIn(req, res, next) {
                 next()
             }
         })
-        if (userFound) {
+        if (!userFound) {
             res.sendStatus(401)
         }
     }

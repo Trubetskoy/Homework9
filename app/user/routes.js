@@ -29,20 +29,21 @@ router.post('/registration', (req, res) => {
 
 router.post('/login', (req, res) => {
     let user = req.body
-    console.log (user)
     let users = JSON.parse(fs.readFileSync(userDataBasePath)).users
     let userFound = false
     users.forEach((userFromDb) => {
         if (userFromDb.email === user.email && user.password === userFromDb.password) {
-            userFound = true
             userFromDb.token = uuidv1()
-            let userToJson = JSON.stringify({ users: users })
-            fs.writeFileSync(userDataBasePath, userToJson)
-            res.send(userFromDb)
+            userFound = userFromDb
         }
     })
     if (!userFound) {
         res.sendStatus(401)
+    }
+    else {
+        let userToJson = JSON.stringify({ users: users })
+        fs.writeFileSync(userDataBasePath, userToJson)
+        res.send(userFound)
     }
 
 })
