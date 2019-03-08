@@ -3,9 +3,9 @@ const router = express.Router()
 const fs = require('fs')
 const toDoDataBasePath = './app/toDo/toDo.database.json'
 const { isLogedIn } = require('../user/authentication')
+const { newToDoValidator, editToDoValidator } = require('./toDo.validator')
 
-router.post('/todolist', isLogedIn, (req, res) => {
-
+router.post('/todolist', newToDoValidator, isLogedIn, (req, res) => {
     let toDo = req.body
     let toDoList = JSON.parse(fs.readFileSync(toDoDataBasePath)).toDoList
     toDoList.push(toDo)
@@ -31,10 +31,10 @@ router.delete('/todolist/:toDoId', isLogedIn, (req, res) => {
     })
     let toDoListToJson = JSON.stringify({ toDoList })
     fs.writeFileSync(toDoDataBasePath, toDoListToJson)
-    res.send({status: 200})
+    res.send({ status: 200 })
 })
 
-router.put('/todolist/:toDoId', isLogedIn, (req, res) => {
+router.put('/todolist/:toDoId', editToDoValidator, isLogedIn, (req, res) => {
     let toDo = req.body
     let toDoList = JSON.parse(fs.readFileSync(toDoDataBasePath)).toDoList
     let toDoId = req.params.toDoId
